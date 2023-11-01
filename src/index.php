@@ -1,20 +1,3 @@
-<?php
-$requestedFile = __DIR__ . $_SERVER['REQUEST_URI'];
-
-// Check if the requested file exists and is an image (e.g., .jpg, .png, .gif)
-if ( file_exists( $requestedFile ) && preg_match( "/\.(jpg|jpeg|png|gif)$/i", $requestedFile ) ) {
-	$fileInfo = pathinfo( $requestedFile );
-	$fileExtension = $fileInfo['extension'];
-	$contentType = 'image/' . $fileExtension;
-
-	// Set the appropriate content type for the image
-	header( 'Content-Type: ' . $contentType );
-
-	// Output the image file directly
-	readfile( $requestedFile );
-	exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
