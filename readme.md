@@ -1,8 +1,6 @@
 # PHPhotos
 
-**Project Description**
-
-This is a mostly ChatGPT generated PHP photo gallery application.
+This is a mostly ChatGPT generated PHP photo gallery application. Demo at https://photos.vandragt.com/
 
 ## Table of Contents
 
