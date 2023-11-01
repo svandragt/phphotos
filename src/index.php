@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHPhotos</title>
-    <meta name="description" content="PHPhotos">
-    <meta name="author" content="Sander van Dragt">
+    <meta name="generator" content="PHPhotos - https://github.com/svandragt/phphotos" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
     <style>
