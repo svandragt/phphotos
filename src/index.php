@@ -88,7 +88,7 @@ foreach ( $images as $image ) {
 	}
 
 	// Output HTML figure tags
-	echo '<figure data-image="' . $image . '">';
+	echo '<figure data-image="' . $image . '" tabindex="0">';
 	echo '<img src="' . $thumbnailPath . '" alt="Thumbnail">';
 	echo '<figcaption>' . getSanitizedCaption( $image ) . '</figcaption>';
 	echo '</figure>';
@@ -149,8 +149,8 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
     <span class="close" id="closeModal">&times;</span>
 
     <figure>
-    <img id="modalImage" src="" alt="Modal Image">
-    <figcaption id="modalCaption"></figcaption>
+        <img id="modalImage" src="" alt="Modal Image">
+        <figcaption id="modalCaption"></figcaption>
     </figure>
 </div>
 
@@ -202,11 +202,28 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
         figure.addEventListener('click', function (event) {
             openModal(event, index);
         });
+        figure.addEventListener('keydown', function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                openModal(event, index);
+            }
+        });
     });
 
     // Attach click event listener to close button
     closeModal.addEventListener('click', closeModalFunc);
+    closeModal.addEventListener('keydown', function (event) {
+        // Check for Enter key (key code 13) or Space key (key code 32)
+        if (event.key === "Enter" || event.key === " ") {
+            closeModalFunc();
+        }
+    });
     modal.addEventListener('click', closeModalFunc);
+    modal.addEventListener('keydown', function (event) {
+        // Check for Enter key (key code 13) or Space key (key code 32)
+        if (event.key === "Enter" || event.key === " ") {
+            closeModalFunc();
+        }
+    });
 
     // Attach keyboard event listeners
     document.addEventListener('keydown', function (event) {
