@@ -88,7 +88,7 @@ foreach ( $images as $image ) {
 	}
 
 	// Output HTML figure tags
-	echo '<figure data-image="' . $image . '" tabindex="0">';
+	echo '<figure data-image="' . $image . '" tabindex="0" role="button">';
 	echo '<img src="' . $thumbnailPath . '" alt="Thumbnail">';
 	echo '<figcaption>' . getSanitizedCaption( $image ) . '</figcaption>';
 	echo '</figure>';
@@ -146,7 +146,7 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
 
 ?>
 <div id="imageModal" class="modal">
-    <span class="close" id="closeModal">&times;</span>
+    <span role="button" class="close" id="closeModal" tabindex="0">&times;</span>
 
     <figure>
         <img id="modalImage" src="" alt="Modal Image">
