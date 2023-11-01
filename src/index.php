@@ -51,7 +51,7 @@
             display: block;
             max-width: 90%;
             max-height: 90%;
-            margin: 10% auto 0;
+            margin: 60px auto 0;
         }
 
         .close {
