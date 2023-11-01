@@ -30,6 +30,7 @@
             max-width: 100%; /* Ensure images don't exceed their container width */
             height: auto; /* Maintain image aspect ratio */
             border-radius: 8px;
+            cursor:pointer;
         }
 
     </style>
@@ -197,6 +198,7 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
 
     // Attach click event listener to close button
     closeModal.addEventListener('click', closeModalFunc);
+    modal.addEventListener('click', closeModalFunc);
 
     // Attach keyboard event listeners
     document.addEventListener('keydown', function (event) {
