@@ -97,35 +97,50 @@ function getSanitizedCaption( string $filename ) : string {
 }
 
 // Function to create a 16:9 cropped thumbnail
+// Function to create a 16:9 cropped thumbnail
 function createThumbnail( $source, $destination, $width, $height ) : void {
-	[ $srcWidth, $srcHeight ] = getimagesize( $source );
-	$srcAspect = $srcWidth / $srcHeight;
-	$cropX = 0;
-	$cropY = 0;
+    [ $srcWidth, $srcHeight, $imageType ] = getimagesize( $source );
 
-	$newWidth = $srcWidth;
-	$newHeight = $srcHeight;
+    if ($imageType === IMAGETYPE_PNG) {
+        $sourceImage = imagecreatefrompng( $source );
+    } elseif ($imageType === IMAGETYPE_JPEG) {
+        $sourceImage = imagecreatefromjpeg( $source );
+    } else {
+        // Unsupported image type
+        return;
+    }
 
-	if ( $srcAspect > 16 / 9 ) {
-		// Source image is wider, crop the sides
-		$newWidth = $srcHeight * 16 / 9;
-		$cropX = ( $srcWidth - $newWidth ) / 2;
-	} else {
-		// Source image is taller, crop the top and bottom
-		$newHeight = $srcWidth * 9 / 16;
-		$cropY = ( $srcHeight - $newHeight ) / 2;
-	}
+    $srcAspect = $srcWidth / $srcHeight;
+    $cropX = 0;
+    $cropY = 0;
 
-	$thumb = imagecreatetruecolor( $width, $height );
-	$sourceImage = imagecreatefrompng( $source );
+    $newWidth = $srcWidth;
+    $newHeight = $srcHeight;
 
-	imagecopyresampled( $thumb, $sourceImage, 0, 0, $cropX, $cropY, $width, $height, $newWidth, $newHeight );
+    if ( $srcAspect > 16 / 9 ) {
+        // Source image is wider, crop the sides
+        $newWidth = $srcHeight * 16 / 9;
+        $cropX = ( $srcWidth - $newWidth ) / 2;
+    } else {
+        // Source image is taller, crop the top and bottom
+        $newHeight = $srcWidth * 9 / 16;
+        $cropY = ( $srcHeight - $newHeight ) / 2;
+    }
 
-	imagejpeg( $thumb, $destination, 90 );
+    $thumb = imagecreatetruecolor( $width, $height );
 
-	imagedestroy( $thumb );
-	imagedestroy( $sourceImage );
+    imagecopyresampled( $thumb, $sourceImage, 0, 0, $cropX, $cropY, $width, $height, $newWidth, $newHeight );
+
+    if ($imageType === IMAGETYPE_PNG) {
+        imagejpeg( $thumb, $destination, 90 );
+    } elseif ($imageType === IMAGETYPE_JPEG) {
+        imagejpeg( $thumb, $destination, 90 );
+    }
+
+    imagedestroy( $thumb );
+    imagedestroy( $sourceImage );
 }
+
 
 ?>
 <div id="imageModal" class="modal">
