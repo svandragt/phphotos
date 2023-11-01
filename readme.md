@@ -7,9 +7,6 @@ This is a mostly ChatGPT generated PHP photo gallery application.
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
