@@ -30,7 +30,7 @@
             max-width: 100%; /* Ensure images don't exceed their container width */
             height: auto; /* Maintain image aspect ratio */
             border-radius: 8px;
-            cursor:pointer;
+            cursor: pointer;
         }
 
     </style>
@@ -54,6 +54,10 @@
             margin: 60px auto 0;
         }
 
+        .modal figcaption {
+            color: white;
+        }
+
         .close {
             position: absolute;
             top: 15px;
@@ -75,7 +79,7 @@ $images = glob( $sourceDir . '*.{jpg,png,gif}', GLOB_BRACE );
 
 // Loop through each image and create thumbnails
 foreach ( $images as $image ) {
-	$imageHash = hash( 'md5', $image . filemtime($image) );
+	$imageHash = hash( 'md5', $image . filemtime( $image ) );
 	$thumbnailPath = $cacheDir . $imageHash . '.jpg';
 
 	// Create a 16:9 crop and resize to 300px wide
@@ -98,53 +102,56 @@ function getSanitizedCaption( string $filename ) : string {
 
 // Function to create a 16:9 cropped thumbnail
 function createThumbnail( $source, $destination, $width, $height ) : void {
-    [ $srcWidth, $srcHeight, $imageType ] = getimagesize( $source );
+	[ $srcWidth, $srcHeight, $imageType ] = getimagesize( $source );
 
-    if ($imageType === IMAGETYPE_PNG) {
-        $sourceImage = imagecreatefrompng( $source );
-    } elseif ($imageType === IMAGETYPE_JPEG) {
-        $sourceImage = imagecreatefromjpeg( $source );
-    } else {
-        // Unsupported image type
-        return;
-    }
+	if ( $imageType === IMAGETYPE_PNG ) {
+		$sourceImage = imagecreatefrompng( $source );
+	} elseif ( $imageType === IMAGETYPE_JPEG ) {
+		$sourceImage = imagecreatefromjpeg( $source );
+	} else {
+		// Unsupported image type
+		return;
+	}
 
-    $srcAspect = $srcWidth / $srcHeight;
-    $cropX = 0;
-    $cropY = 0;
+	$srcAspect = $srcWidth / $srcHeight;
+	$cropX = 0;
+	$cropY = 0;
 
-    $newWidth = $srcWidth;
-    $newHeight = $srcHeight;
+	$newWidth = $srcWidth;
+	$newHeight = $srcHeight;
 
-    if ( $srcAspect > 16 / 9 ) {
-        // Source image is wider, crop the sides
-        $newWidth = $srcHeight * 16 / 9;
-        $cropX = ( $srcWidth - $newWidth ) / 2;
-    } else {
-        // Source image is taller, crop the top and bottom
-        $newHeight = $srcWidth * 9 / 16;
-        $cropY = ( $srcHeight - $newHeight ) / 2;
-    }
+	if ( $srcAspect > 16 / 9 ) {
+		// Source image is wider, crop the sides
+		$newWidth = $srcHeight * 16 / 9;
+		$cropX = ( $srcWidth - $newWidth ) / 2;
+	} else {
+		// Source image is taller, crop the top and bottom
+		$newHeight = $srcWidth * 9 / 16;
+		$cropY = ( $srcHeight - $newHeight ) / 2;
+	}
 
-    $thumb = imagecreatetruecolor( $width, $height );
+	$thumb = imagecreatetruecolor( $width, $height );
 
-    imagecopyresampled( $thumb, $sourceImage, 0, 0, $cropX, $cropY, $width, $height, $newWidth, $newHeight );
+	imagecopyresampled( $thumb, $sourceImage, 0, 0, $cropX, $cropY, $width, $height, $newWidth, $newHeight );
 
-    if ($imageType === IMAGETYPE_PNG) {
-        imagejpeg( $thumb, $destination, 90 );
-    } elseif ($imageType === IMAGETYPE_JPEG) {
-        imagejpeg( $thumb, $destination, 90 );
-    }
+	if ( $imageType === IMAGETYPE_PNG ) {
+		imagejpeg( $thumb, $destination, 90 );
+	} elseif ( $imageType === IMAGETYPE_JPEG ) {
+		imagejpeg( $thumb, $destination, 90 );
+	}
 
-    imagedestroy( $thumb );
-    imagedestroy( $sourceImage );
+	imagedestroy( $thumb );
+	imagedestroy( $sourceImage );
 }
-
 
 ?>
 <div id="imageModal" class="modal">
     <span class="close" id="closeModal">&times;</span>
+
+    <figure>
     <img id="modalImage" src="" alt="Modal Image">
+    <figcaption id="modalCaption"></figcaption>
+    </figure>
 </div>
 
 <script>
@@ -152,9 +159,10 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
     const modal = document.getElementById('imageModal');
     const closeModal = document.getElementById('closeModal');
     const modalImage = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
 
-    // Get all figure elements
-    const figures = document.querySelectorAll('figure');
+    // Get all figure elements, excluding modal
+    const figures = document.querySelectorAll('body > figure');
 
     // Variable to track the currently displayed image index
     let currentImageIndex = 0;
@@ -163,6 +171,7 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
     function openModal(event, index) {
         currentImageIndex = index;
         modalImage.src = event.currentTarget.getAttribute('data-image');
+        modalCaption.textContent = event.currentTarget.getElementsByTagName("figcaption")[0].textContent;
         modal.style.display = 'block';
     }
 
@@ -173,6 +182,7 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
 
     // Function to navigate to the next image
     function nextImage() {
+        // modal itself is also one
         if (currentImageIndex < figures.length - 1) {
             currentImageIndex++;
             openModal({currentTarget: figures[currentImageIndex]}, currentImageIndex);
