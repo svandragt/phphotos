@@ -52,33 +52,33 @@ if ( file_exists( $requestedFile ) && preg_match( "/\.(jpg|jpeg|png|gif)$/i", $r
     </style>
     <style>
         .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.9);
-}
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
 
-.modal img {
-  display: block;
-  margin: 0 auto;
-  max-width: 90%;
-  max-height: 90%;
-  margin-top: 10%;
-}
+        .modal img {
+            display: block;
+            margin: 0 auto;
+            max-width: 90%;
+            max-height: 90%;
+            margin-top: 10%;
+        }
 
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  font-size: 30px;
-  cursor: pointer;
-  color: white;
-}
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
 
     </style>
 </head>
@@ -93,16 +93,16 @@ $images = glob( $sourceDir . '*.{jpg,png,gif}', GLOB_BRACE );
 
 // Loop through each image and create thumbnails
 foreach ( $images as $image ) {
-	$imageHash = hash_file( 'md5', $image );
+	$imageHash = hash( 'md5', $image . filemtime($image) );
 	$thumbnailPath = $cacheDir . $imageHash . '.jpg';
 
 	// Create a 16:9 crop and resize to 300px wide
-    if (!file_exists( $thumbnailPath)) {
-    	createThumbnail( $image, $thumbnailPath, 300, 169 );
-    }
+	if ( ! file_exists( $thumbnailPath ) ) {
+		createThumbnail( $image, $thumbnailPath, 300, 169 );
+	}
 
 	// Output HTML figure tags
-    echo '<figure data-image="' . $image . '">';
+	echo '<figure data-image="' . $image . '">';
 	echo '<img src="' . $thumbnailPath . '" alt="Thumbnail">';
 	echo '<figcaption>' . getSanitizedCaption( $image ) . '</figcaption>';
 	echo '</figure>';
@@ -126,7 +126,7 @@ function getSanitizedCaption( $filename ) {
 
 // Function to create a 16:9 cropped thumbnail
 function createThumbnail( $source, $destination, $width, $height ) {
-	list( $srcWidth, $srcHeight ) = getimagesize( $source );
+	[ $srcWidth, $srcHeight ] = getimagesize( $source );
 	$srcAspect = $srcWidth / $srcHeight;
 	$cropX = 0;
 	$cropY = 0;
@@ -157,77 +157,77 @@ function createThumbnail( $source, $destination, $width, $height ) {
 
 ?>
 <div id="imageModal" class="modal">
-  <span class="close" id="closeModal">&times;</span>
-  <img id="modalImage" src="" alt="Modal Image">
+    <span class="close" id="closeModal">&times;</span>
+    <img id="modalImage" src="" alt="Modal Image">
 </div>
 
 <script>
-// Get the modal, close button, and modal image
-var modal = document.getElementById('imageModal');
-var closeModal = document.getElementById('closeModal');
-var modalImage = document.getElementById('modalImage');
+    // Get the modal, close button, and modal image
+    var modal = document.getElementById('imageModal');
+    var closeModal = document.getElementById('closeModal');
+    var modalImage = document.getElementById('modalImage');
 
-// Get all figure elements
-var figures = document.querySelectorAll('figure');
+    // Get all figure elements
+    var figures = document.querySelectorAll('figure');
 
-// Variable to track the currently displayed image index
-var currentImageIndex = 0;
+    // Variable to track the currently displayed image index
+    var currentImageIndex = 0;
 
-// Function to open the modal
-function openModal(event, index) {
-    currentImageIndex = index;
-    var image = event.currentTarget.getAttribute('data-image');
-    modalImage.src = image;
-    modal.style.display = 'block';
-}
-
-// Function to close the modal
-function closeModalFunc() {
-    modal.style.display = 'none';
-}
-
-// Function to navigate to the next image
-function nextImage() {
-    if (currentImageIndex < figures.length - 1) {
-        currentImageIndex++;
-        openModal({ currentTarget: figures[currentImageIndex] }, currentImageIndex);
+    // Function to open the modal
+    function openModal(event, index) {
+        currentImageIndex = index;
+        var image = event.currentTarget.getAttribute('data-image');
+        modalImage.src = image;
+        modal.style.display = 'block';
     }
-}
 
-// Function to navigate to the previous image
-function previousImage() {
-    if (currentImageIndex > 0) {
-        currentImageIndex--;
-        openModal({ currentTarget: figures[currentImageIndex] }, currentImageIndex);
+    // Function to close the modal
+    function closeModalFunc() {
+        modal.style.display = 'none';
     }
-}
 
-// Attach click event listeners to figures
-figures.forEach(function (figure, index) {
-    figure.addEventListener('click', function (event) {
-        openModal(event, index);
-    });
-});
-
-// Attach click event listener to close button
-closeModal.addEventListener('click', closeModalFunc);
-
-// Attach keyboard event listeners
-document.addEventListener('keydown', function (event) {
-    if (modal.style.display === 'block') {
-        switch (event.key) {
-            case 'ArrowRight':
-                nextImage();
-                break;
-            case 'ArrowLeft':
-                previousImage();
-                break;
-            case 'Escape':
-                closeModalFunc();
-                break;
+    // Function to navigate to the next image
+    function nextImage() {
+        if (currentImageIndex < figures.length - 1) {
+            currentImageIndex++;
+            openModal({currentTarget: figures[currentImageIndex]}, currentImageIndex);
         }
     }
-});
+
+    // Function to navigate to the previous image
+    function previousImage() {
+        if (currentImageIndex > 0) {
+            currentImageIndex--;
+            openModal({currentTarget: figures[currentImageIndex]}, currentImageIndex);
+        }
+    }
+
+    // Attach click event listeners to figures
+    figures.forEach(function (figure, index) {
+        figure.addEventListener('click', function (event) {
+            openModal(event, index);
+        });
+    });
+
+    // Attach click event listener to close button
+    closeModal.addEventListener('click', closeModalFunc);
+
+    // Attach keyboard event listeners
+    document.addEventListener('keydown', function (event) {
+        if (modal.style.display === 'block') {
+            switch (event.key) {
+                case 'ArrowRight':
+                    nextImage();
+                    break;
+                case 'ArrowLeft':
+                    previousImage();
+                    break;
+                case 'Escape':
+                    closeModalFunc();
+                    break;
+            }
+        }
+    });
 
 
 </script>
