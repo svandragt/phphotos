@@ -34,7 +34,7 @@ if ( file_exists( $requestedFile ) && preg_match( "/\.(jpg|jpeg|png|gif)$/i", $r
             font-family: 'Poppins', sans-serif;
         }
 
-        .figure {
+        figure {
             display: flex;
             flex-direction: column;
             align-items: center; /* Vertically center items within the figure */
@@ -65,10 +65,9 @@ if ( file_exists( $requestedFile ) && preg_match( "/\.(jpg|jpeg|png|gif)$/i", $r
 
         .modal img {
             display: block;
-            margin: 0 auto;
             max-width: 90%;
             max-height: 90%;
-            margin-top: 10%;
+            margin: 10% auto 0;
         }
 
         .close {
@@ -108,24 +107,14 @@ foreach ( $images as $image ) {
 	echo '</figure>';
 }
 
-function getSanitizedCaption( $filename ) {
+function getSanitizedCaption( string $filename ) : string {
 	$filenameWithoutExtension = pathinfo( $filename, PATHINFO_FILENAME );
-	$sanitizedCaption = ucfirst( str_replace( "_", " ", $filenameWithoutExtension ) );
-	$words = explode( ' ', $sanitizedCaption );
 
-	// Remove the first two words and the last word (the ID)
-	array_pop( $words ); // Remove the last word
-	array_shift( $words ); // Remove the first word
-	array_shift( $words ); // Remove the second word
-
-	$sanitizedCaption = implode( ' ', $words );
-
-	// Reconstruct the sanitized caption
-	return $sanitizedCaption;
+	return ucfirst( str_replace( "_", " ", $filenameWithoutExtension ) );
 }
 
 // Function to create a 16:9 cropped thumbnail
-function createThumbnail( $source, $destination, $width, $height ) {
+function createThumbnail( $source, $destination, $width, $height ) : void {
 	[ $srcWidth, $srcHeight ] = getimagesize( $source );
 	$srcAspect = $srcWidth / $srcHeight;
 	$cropX = 0;
@@ -163,21 +152,20 @@ function createThumbnail( $source, $destination, $width, $height ) {
 
 <script>
     // Get the modal, close button, and modal image
-    var modal = document.getElementById('imageModal');
-    var closeModal = document.getElementById('closeModal');
-    var modalImage = document.getElementById('modalImage');
+    const modal = document.getElementById('imageModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalImage = document.getElementById('modalImage');
 
     // Get all figure elements
-    var figures = document.querySelectorAll('figure');
+    const figures = document.querySelectorAll('figure');
 
     // Variable to track the currently displayed image index
-    var currentImageIndex = 0;
+    let currentImageIndex = 0;
 
     // Function to open the modal
     function openModal(event, index) {
         currentImageIndex = index;
-        var image = event.currentTarget.getAttribute('data-image');
-        modalImage.src = image;
+        modalImage.src = event.currentTarget.getAttribute('data-image');
         modal.style.display = 'block';
     }
 
