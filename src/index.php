@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Thumbnails</title>
-    <meta name="description" content="Image Thumbnails with HTML figure tags">
+    <title>PHPhotos</title>
+    <meta name="description" content="PHPhotos">
     <meta name="author" content="Sander van Dragt">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
@@ -62,7 +62,6 @@
             cursor: pointer;
             color: white;
         }
-
     </style>
 </head>
 <body>
@@ -97,7 +96,6 @@ function getSanitizedCaption( string $filename ) : string {
 	return ucfirst( str_replace( "_", " ", $filenameWithoutExtension ) );
 }
 
-// Function to create a 16:9 cropped thumbnail
 // Function to create a 16:9 cropped thumbnail
 function createThumbnail( $source, $destination, $width, $height ) : void {
     [ $srcWidth, $srcHeight, $imageType ] = getimagesize( $source );
@@ -216,8 +214,6 @@ function createThumbnail( $source, $destination, $width, $height ) : void {
             }
         }
     });
-
-
 </script>
 </body>
 </html>
