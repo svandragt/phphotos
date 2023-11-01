@@ -17,6 +17,6 @@ cd phphotos
 php -S localhost:5000 -t src   
 ```
 
-Put pngs in src/photos/. Thumbs will be cached in src/cache/, so that needs to be writable by the PHP user.
+Put PNG or JPG files in src/photos/. Thumbs will be cached in src/cache/, so that needs to be writable by the PHP user.
 
 It requires PHP 8.1 and the GD extension.
